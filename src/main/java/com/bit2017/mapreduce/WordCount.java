@@ -44,9 +44,9 @@ public class WordCount {
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			String line = value.toString();
-			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''");
+			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 			while (token.hasMoreTokens()) {
-				words.set(token.nextToken());
+				words.set(token.nextToken().toLowerCase());
 				context.write(words, one);
 
 			}
