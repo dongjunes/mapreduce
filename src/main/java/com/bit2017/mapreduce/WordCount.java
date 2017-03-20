@@ -60,6 +60,8 @@ public class WordCount {
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
+			log.info("map() ==>called");
+			
 			String line = value.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 			while (token.hasMoreTokens()) {
