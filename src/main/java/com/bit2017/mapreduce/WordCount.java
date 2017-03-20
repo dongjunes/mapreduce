@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4jFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -19,7 +20,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WordCount {
 
-	private static Log log = Log4jFactory.getLog(WordCount.class);
+	private static Log log = LogFactory.getLog(WordCount.class);
 
 	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
 
