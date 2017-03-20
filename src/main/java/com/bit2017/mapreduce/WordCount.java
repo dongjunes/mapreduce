@@ -3,6 +3,8 @@ package com.bit2017.mapreduce;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Log4jFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -16,6 +18,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WordCount {
+
+	private static Log log = Log4jFactory.getLog(WordCount.class);
 
 	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
 
@@ -33,6 +37,18 @@ public class WordCount {
 			context.write(key, sumWritable);
 		}
 
+		@Override
+		protected void cleanup(Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			log.info("CleanCalled ==>reduce");
+		}
+
+		@Override
+		protected void setup(Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			log.info("setupCalled ==>reduce");
+		}
+		
 	}
 
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
@@ -53,6 +69,19 @@ public class WordCount {
 
 		}
 
+		@Override
+		protected void setup(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+
+			log.info("setupCalled ==>map");
+		}
+
+		@Override
+		protected void cleanup(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			log.info("cleanCalled ==>map");
+		}
+		
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -80,10 +109,10 @@ public class WordCount {
 		// 입력 파일포멧 지정(생략가능
 		job.setOutputFormatClass(TextOutputFormat.class);
 
-		//입력파일 이름지정
+		// 입력파일 이름지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 
-		//출력디렉토리 지정
+		// 출력디렉토리 지정
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		// 실행
 		job.waitForCompletion(true);
