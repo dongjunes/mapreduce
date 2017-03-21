@@ -83,7 +83,7 @@ public class WordCount {
 		job.setMapOutputKeyClass(StringWritable.class);
 
 		// 출력 타입지정
-		job.setMapOutputValueClass(LongWritable.class);
+		job.setMapOutputValueClass(NumberWritable.class);
 
 		// 입력 파일포멧 지정(생략가능
 		job.setInputFormatClass(TextInputFormat.class);
