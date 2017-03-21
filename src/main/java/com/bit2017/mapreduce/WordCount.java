@@ -25,32 +25,20 @@ public class WordCount {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
 
-	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
+	public static class MyReducer extends Reducer<StringWritable, NumberWritable, StringWritable, LongWritable> {
 
 		private LongWritable sumWritable = new LongWritable();
 
 		@Override
-		protected void reduce(Text key, Iterable<LongWritable> values,
-				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+		protected void reduce(StringWritable key, Iterable<NumberWritable> values,
+				Reducer<StringWritable, NumberWritable, StringWritable, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			long sum = 0;
-			for (LongWritable value : values) {
+			for (NumberWritable value : values) {
 				sum += value.get();
 			}
 			sumWritable.set(sum);
 			context.write(key, sumWritable);
-		}
-
-		@Override
-		protected void cleanup(Reducer<Text, LongWritable, Text, LongWritable>.Context context)
-				throws IOException, InterruptedException {
-			log.info("CleanCalled ==>reduce");
-		}
-
-		@Override
-		protected void setup(Reducer<Text, LongWritable, Text, LongWritable>.Context context)
-				throws IOException, InterruptedException {
-			log.info("setupCalled ==>reduce");
 		}
 
 	}
@@ -74,19 +62,6 @@ public class WordCount {
 
 			}
 
-		}
-
-		@Override
-		protected void setup(Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
-				throws IOException, InterruptedException {
-
-			log.info("setupCalled ==>map");
-		}
-
-		@Override
-		protected void cleanup(Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
-				throws IOException, InterruptedException {
-			log.info("cleanCalled ==>map");
 		}
 
 	}
@@ -121,6 +96,7 @@ public class WordCount {
 
 		// 출력디렉토리 지정
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
 		// 실행
 		job.waitForCompletion(true);
 	}
