@@ -5,7 +5,6 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.impl.Log4jFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -24,24 +23,6 @@ import com.bit2017.mapreduce.io.StringWritable;
 public class WordCount {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-
-	public static class MyReducer extends Reducer<StringWritable, NumberWritable, StringWritable, LongWritable> {
-
-		private LongWritable sumWritable = new LongWritable();
-
-		@Override
-		protected void reduce(StringWritable key, Iterable<NumberWritable> values,
-				Reducer<StringWritable, NumberWritable, StringWritable, LongWritable>.Context context)
-				throws IOException, InterruptedException {
-			long sum = 0;
-			for (NumberWritable value : values) {
-				sum += value.get();
-			}
-			sumWritable.set(sum);
-			context.write(key, sumWritable);
-		}
-
-	}
 
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
@@ -62,6 +43,28 @@ public class WordCount {
 
 			}
 
+		}
+
+	}
+
+	public static class MyReducer extends Reducer<StringWritable, NumberWritable, StringWritable, LongWritable> {
+
+		private LongWritable sumWritable = new LongWritable();
+
+		@Override
+		protected void reduce(StringWritable key, Iterable<NumberWritable> values,
+				Reducer<StringWritable, NumberWritable, StringWritable, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			long sum = 0;
+			for (NumberWritable value : values) {
+				sum += value.get();
+			}
+			sumWritable.set(sum);
+			
+			context.getCounter("Word Status","Count of all Words").increment(sum);
+			
+			context.write(key, sumWritable);
+		
 		}
 
 	}
