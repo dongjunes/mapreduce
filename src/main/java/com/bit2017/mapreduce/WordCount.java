@@ -18,6 +18,9 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import com.bit2017.mapreduce.io.NumberWritable;
+import com.bit2017.mapreduce.io.StringWritable;
+
 public class WordCount {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
@@ -49,19 +52,20 @@ public class WordCount {
 				throws IOException, InterruptedException {
 			log.info("setupCalled ==>reduce");
 		}
-		
+
 	}
 
-	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
-		private static LongWritable one = new LongWritable(1);
-		private Text words = new Text();
+		private static NumberWritable one = new NumberWritable(1L);
+		private StringWritable words = new StringWritable();
 
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void map(LongWritable key, Text value,
+				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			log.info("map() ==>called");
-			
+
 			String line = value.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 			while (token.hasMoreTokens()) {
@@ -73,18 +77,18 @@ public class WordCount {
 		}
 
 		@Override
-		protected void setup(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void setup(Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 
 			log.info("setupCalled ==>map");
 		}
 
 		@Override
-		protected void cleanup(Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void cleanup(Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			log.info("cleanCalled ==>map");
 		}
-		
+
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -101,7 +105,7 @@ public class WordCount {
 		job.setReducerClass(MyReducer.class);
 
 		// 출력 키 타입
-		job.setOutputKeyClass(Text.class);
+		job.setMapOutputKeyClass(StringWritable.class);
 
 		// 출력 타입지정
 		job.setMapOutputValueClass(LongWritable.class);
@@ -109,7 +113,7 @@ public class WordCount {
 		// 입력 파일포멧 지정(생략가능
 		job.setInputFormatClass(TextInputFormat.class);
 
-		// 입력 파일포멧 지정(생략가능
+		// 출력 파일포멧 지정(생략가능
 		job.setOutputFormatClass(TextOutputFormat.class);
 
 		// 입력파일 이름지정
