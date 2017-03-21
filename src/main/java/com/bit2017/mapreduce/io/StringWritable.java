@@ -8,12 +8,15 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableUtils;
 
-public class StringWritable implements WritableComparable<String> {
+public class StringWritable implements WritableComparable<StringWritable> {
 
 	private String value;
 
 	public void set(String value) {
 		this.value = value;
+	}
+	public String get(){
+		return value;
 	}
 
 	@Override
@@ -29,8 +32,8 @@ public class StringWritable implements WritableComparable<String> {
 	}
 
 	@Override
-	public int compareTo(String o) {
-		return value.compareTo(o);
+	public int compareTo(StringWritable o) {
+		return value.compareTo(o.get());
 	}
 
 	@Override
