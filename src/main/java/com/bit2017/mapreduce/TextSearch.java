@@ -45,10 +45,9 @@ public class TextSearch {
 			log.info("map => data : " + data);
 
 			String line = value.toString();
-
+			CharSequence c = data;
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
-			if (line.contains(data)) {
-
+			while (line.contains(c)) {
 				words.set(token.nextToken().toLowerCase());
 				context.write(words, one);
 
