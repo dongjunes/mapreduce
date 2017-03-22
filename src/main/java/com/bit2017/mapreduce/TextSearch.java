@@ -29,12 +29,15 @@ import com.bit2017.mapreduce.io.StringWritable;
 public class TextSearch {
 
 	private static Log log = LogFactory.getLog(TextSearch.class);
-	private static String data = null;
 
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
-
+		private String data;
 		private static NumberWritable one = new NumberWritable(1L);
 		private StringWritable words = new StringWritable();
+
+		public MyMapper(String data) {
+			this.data = data;
+		}
 
 		@Override
 		protected void map(LongWritable key, Text value,
@@ -81,16 +84,15 @@ public class TextSearch {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		log.info("main => args[2] " + args[2]);
-		data = args[2];
-		log.info("main => data " + data);
-		
+
+		MyMapper map = new MyMapper(args[2]);
+
 		Job job = new Job(conf, "TextSearch");
 		// job init
 		job.setJarByClass(TextSearch.class);
 
 		// mapper 지정
-		job.setMapperClass(MyMapper.class);
+		job.setMapperClass(map.getClass());
 
 		// reducer 지정
 		job.setReducerClass(MyReducer.class);
