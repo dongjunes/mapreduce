@@ -40,17 +40,18 @@ public class TextSearch {
 				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			Configuration conf = context.getConfiguration();
-			data = conf.get("data");
+			CharSequence c = conf.get("data");
 
 			log.info("map => data : " + data);
 
 			String line = value.toString();
-			CharSequence c = data;
-			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
-			while (line.contains(c)) {
-				words.set(token.nextToken().toLowerCase());
-				context.write(words, one);
 
+			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
+			while (token.hasMoreTokens()) {
+				if (line.contains(c)) {
+					words.set(token.nextToken().toLowerCase());
+					context.write(words, one);
+				}
 			}
 
 		}
