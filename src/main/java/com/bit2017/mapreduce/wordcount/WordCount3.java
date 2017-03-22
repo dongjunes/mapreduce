@@ -56,9 +56,6 @@ public class WordCount3 {
 				sum += value.get();
 			}
 			sumWritable.set(sum);
-			
-			context.getCounter("Word Status","Count of all Words").increment(sum);
-			
 			context.write(key, sumWritable);
 		
 		}
