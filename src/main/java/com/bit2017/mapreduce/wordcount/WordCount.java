@@ -1,10 +1,8 @@
-package com.bit2017.mapreduce;
+package com.bit2017.mapreduce.wordcount;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -17,23 +15,17 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import com.bit2017.mapreduce.io.NumberWritable;
-import com.bit2017.mapreduce.io.StringWritable;
-
 public class WordCount {
 
-	private static Log log = LogFactory.getLog(WordCount.class);
+	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
-	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
-
-		private static NumberWritable one = new NumberWritable(1L);
-		private StringWritable words = new StringWritable();
+		private static LongWritable one = new LongWritable(1L);
+		private Text words = new Text();
 
 		@Override
 		protected void map(LongWritable key, Text value,
-				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
+				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
-			log.info("map() ==>called");
 
 			String line = value.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
@@ -47,22 +39,19 @@ public class WordCount {
 
 	}
 
-	public static class MyReducer extends Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable> {
+	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
 
-		private NumberWritable sumWritable = new NumberWritable();
+		private LongWritable sumWritable = new LongWritable();
 
 		@Override
-		protected void reduce(StringWritable key, Iterable<NumberWritable> values,
-				Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable>.Context context)
+		protected void reduce(Text key, Iterable<LongWritable> values,
+				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			long sum = 0;
-			for (NumberWritable value : values) {
+			for (LongWritable value : values) {
 				sum += value.get();
 			}
 			sumWritable.set(sum);
-			
-			context.getCounter("Word Status","Count of all Words").increment(sum);
-			
 			context.write(key, sumWritable);
 		
 		}
@@ -83,10 +72,10 @@ public class WordCount {
 		job.setReducerClass(MyReducer.class);
 
 		// 출력 키 타입
-		job.setMapOutputKeyClass(StringWritable.class);
+		job.setMapOutputKeyClass(Text.class);
 
 		// 출력 타입지정
-		job.setMapOutputValueClass(NumberWritable.class);
+		job.setMapOutputValueClass(LongWritable.class);
 
 		// 입력 파일포멧 지정(생략가능
 		job.setInputFormatClass(TextInputFormat.class);

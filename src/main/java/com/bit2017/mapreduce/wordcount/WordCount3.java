@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce;
+package com.bit2017.mapreduce.wordcount;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -18,7 +18,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import com.bit2017.mapreduce.io.NumberWritable;
 import com.bit2017.mapreduce.io.StringWritable;
 
-public class WordCount2 {
+public class WordCount3 {
 	private static Log log = LogFactory.getLog(WordCount.class);
 
 	public static class MyMapper extends Mapper<Text, Text, StringWritable, NumberWritable> {
