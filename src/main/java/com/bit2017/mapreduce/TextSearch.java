@@ -84,6 +84,7 @@ public class TextSearch {
 		Job job = new Job(conf, "TextSearch");
 
 		data = args[2];
+		log.info("main => data : " + data);
 
 		// job init
 		job.setJarByClass(TextSearch.class);
