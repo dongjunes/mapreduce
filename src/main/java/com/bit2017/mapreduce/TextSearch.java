@@ -81,11 +81,11 @@ public class TextSearch {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = new Job(conf, "TextSearch");
-
+		log.info("main => args[2] " + args[2]);
 		data = args[2];
-		log.info("main => data : " + data);
-
+		log.info("main => data " + data);
+		
+		Job job = new Job(conf, "TextSearch");
 		// job init
 		job.setJarByClass(TextSearch.class);
 
