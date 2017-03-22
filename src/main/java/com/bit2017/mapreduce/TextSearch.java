@@ -47,11 +47,11 @@ public class TextSearch {
 			String line = value.toString();
 
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
-			while (line.contains(data)) {
-				
-					words.set(token.nextToken().toLowerCase());
-					context.write(words, one);
-				
+			if (line.contains(data)) {
+
+				// words.set(token.nextToken().toLowerCase());
+				context.write(words, one);
+
 			}
 
 		}
