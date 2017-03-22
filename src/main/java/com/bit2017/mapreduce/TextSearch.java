@@ -50,7 +50,8 @@ public class TextSearch {
 			if (line.contains(c)) {
 				words.set(line);
 				context.write(words, one);
-
+				
+				log.info("무한로프");
 			}
 
 		}
