@@ -35,14 +35,12 @@ public class TextSearch {
 		private static NumberWritable one = new NumberWritable(1L);
 		private StringWritable words = new StringWritable();
 
-		public MyMapper(String data) {
-			this.data = data;
-		}
-
 		@Override
 		protected void map(LongWritable key, Text value,
 				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
+			Configuration conf = context.getConfiguration();
+			data = conf.get("data");
 
 			log.info("map => data : " + data);
 
@@ -84,15 +82,14 @@ public class TextSearch {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-
-		MyMapper map = new MyMapper(args[2]);
+		conf.set("data", args[2]);
 
 		Job job = new Job(conf, "TextSearch");
 		// job init
 		job.setJarByClass(TextSearch.class);
 
 		// mapper 지정
-		job.setMapperClass(map.getClass());
+		job.setMapperClass(MyMapper.class);
 
 		// reducer 지정
 		job.setReducerClass(MyReducer.class);
