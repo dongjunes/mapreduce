@@ -49,7 +49,7 @@ public class TextSearch {
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 			if (line.contains(data)) {
 
-				// words.set(token.nextToken().toLowerCase());
+				words.set(token.nextToken().toLowerCase());
 				context.write(words, one);
 
 			}
