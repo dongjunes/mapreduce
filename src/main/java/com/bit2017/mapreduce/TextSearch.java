@@ -28,7 +28,7 @@ import com.bit2017.mapreduce.io.StringWritable;
 
 public class TextSearch {
 
-	private static Log log = LogFactory.getLog(WordCount.class);
+	private static Log log = LogFactory.getLog(TextSearch.class);
 	private static String data = null;
 
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
