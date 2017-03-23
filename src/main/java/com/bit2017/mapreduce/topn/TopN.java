@@ -16,19 +16,19 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class TopN {
-	public static class MyMapper extends Mapper<Text, LongWritable, Text, LongWritable> {
+	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
 		private int topN = 10;
 		private PriorityQueue<ItemFreq> pq = null;
 
 		@Override
-		protected void setup(Mapper<Text, LongWritable, Text, LongWritable>.Context context)
+		protected void setup(Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			topN = context.getConfiguration().getInt("topN", 10);
 			pq = new PriorityQueue<ItemFreq>(10, new ItemFreqComparator());
 		}
 
 		@Override
-		protected void map(Text key, LongWritable value, Mapper<Text, LongWritable, Text, LongWritable>.Context context)
+		protected void map(Text key, Text value, Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			ItemFreq newItemFreq = new ItemFreq();
 			newItemFreq.setItem(key.toString());
@@ -46,7 +46,7 @@ public class TopN {
 		}
 
 		@Override
-		protected void cleanup(Mapper<Text, LongWritable, Text, LongWritable>.Context context)
+		protected void cleanup(Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			while (!pq.isEmpty()) {
 				ItemFreq itemFreq = pq.remove();

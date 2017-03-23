@@ -11,7 +11,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import com.bit2017.mapreduce.topn.TopN;
@@ -28,9 +27,6 @@ public class SearchDocs {
 			CharSequence c = conf.get("data");
 
 			String line = value.toString();
-
-			// StringTokenizer token = new StringTokenizer(line,
-			// "\r\n\t,|()<>''.:");
 			if (line.contains(c)) {
 				words.set(line);
 				context.write(words, one);
