@@ -14,7 +14,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
 	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
