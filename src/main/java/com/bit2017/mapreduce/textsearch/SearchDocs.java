@@ -14,7 +14,6 @@ import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import com.bit2017.mapreduce.io.NumberWritable;
 import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
@@ -71,7 +70,7 @@ public class SearchDocs {
 		job.setMapperClass(MyMapper.class);
 		job.setReducerClass(MyReducer.class);
 		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(NumberWritable.class);
+		job.setMapOutputValueClass(Text.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 		FileInputFormat.addInputPath(job, new Path(args[0]));
