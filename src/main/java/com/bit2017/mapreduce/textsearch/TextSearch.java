@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce;
+package com.bit2017.mapreduce.textsearch;
 
 import java.io.IOException;
 import java.util.HashMap;

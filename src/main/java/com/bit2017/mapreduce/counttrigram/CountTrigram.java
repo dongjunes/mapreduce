@@ -73,10 +73,10 @@ public class CountTrigram {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = new Job(conf, "WordCount");
+		Job job = new Job(conf, "CountTrigram");
 
 		// job init
-		job.setJarByClass(WordCount.class);
+		job.setJarByClass(CountTrigram.class);
 
 		// mapper 지정
 		job.setMapperClass(MyMapper.class);
