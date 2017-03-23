@@ -30,26 +30,23 @@ public class CountTrigram {
 			String line = value.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 
-			line = "hi a b c f g k";
 			String firstWord = token.nextToken();
 			String secondWord = token.nextToken();
 
-			if (token.hasMoreTokens()) {
-				while (token.hasMoreTokens()) {
-					String thirdWord = token.nextToken();
-					String trigram = firstWord + " " + secondWord + " " + thirdWord;
-
-					words.set(trigram);
-					context.write(words, one);
-
-					firstWord = secondWord;
-					secondWord = thirdWord;
-				}
-			} else {
-				System.out.println("문장의 단어가 2개 이하입니다.");
+			if (token.countTokens() < 3) {
 				return;
 			}
 
+			while (token.hasMoreTokens()) {
+				String thirdWord = token.nextToken();
+				String trigram = firstWord + " " + secondWord + " " + thirdWord;
+
+				words.set(trigram);
+				context.write(words, one);
+
+				firstWord = secondWord;
+				secondWord = thirdWord;
+			}
 		}
 
 	}
