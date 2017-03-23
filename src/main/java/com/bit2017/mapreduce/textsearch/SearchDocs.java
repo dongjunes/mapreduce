@@ -15,28 +15,33 @@ import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-
 public class SearchDocs {
 	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
-		private LongWritable one = new LongWritable(1L);
 		private Text words = new Text();
+		private LongWritable one = null;
 
 		@Override
 		protected void map(Text key, Text value, Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			Configuration conf = context.getConfiguration();
-			String data = conf.get("data");
-
+			String findWord = conf.get("data");
 			String line = value.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<>''.:");
-			while (token.hasMoreTokens()) {
-				if (token.nextToken() == data) {
-					words.set(token.nextToken());
-					context.write(words, one);
+
+			int lastIndex = 0;
+			Integer count = 0;
+			while (lastIndex != -1) {
+				lastIndex = line.indexOf(findWord, lastIndex);
+				if (lastIndex != -1) {
+
+					count++;
+					one = new LongWritable(Long.valueOf(count.toString()));
+					lastIndex += findWord.length();
 				}
 
 			}
-
+			words.set(findWord);
+			context.write(words, one);
 		}
 
 	}
