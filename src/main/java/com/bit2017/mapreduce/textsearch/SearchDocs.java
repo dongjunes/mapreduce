@@ -76,28 +76,5 @@ public class SearchDocs {
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		job.waitForCompletion(true);
 
-		if (job.waitForCompletion(true) == false) {
-			return;
-		}
-
-		Configuration conf2 = new Configuration();
-		Job job2 = new Job(conf2, "TopN");
-
-		job2.setJarByClass(TopN.class);
-		job2.setOutputKeyClass(Text.class);
-		job2.setOutputValueClass(LongWritable.class);
-
-		job2.setMapperClass(TopN.MyMapper.class);
-		job2.setReducerClass(TopN.MyReducer.class);
-
-		job2.setInputFormatClass(KeyValueTextInputFormat.class);
-		job2.setOutputFormatClass(TextOutputFormat.class);
-
-		FileInputFormat.addInputPath(job2, new Path(args[1]));
-		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
-		job2.getConfiguration().setInt("topN", 10);
-
-		job2.waitForCompletion(true);
-
 	}
 }
