@@ -1,6 +1,7 @@
 package com.bit2017.mapreduce.textsearch;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -27,9 +28,13 @@ public class SearchDocs {
 			CharSequence c = conf.get("data");
 
 			String line = value.toString();
-			if (line.contains(c)) {
-				words.set(line);
-				context.write(words, one);
+			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<>''.:");
+			while (token.hasMoreTokens()) {
+				if (line.contains(c)) {
+					words.set(token.nextToken());
+					context.write(words, one);
+				}
+
 			}
 
 		}
