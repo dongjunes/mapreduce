@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce.citation;
+package com.bit2017.mapreduce.countcitation;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-public class CountCitaion {
+public class CountCitation {
 	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
 
 		private LongWritable one = new LongWritable(1L);
@@ -51,7 +51,7 @@ public class CountCitaion {
 		Job job = new Job(conf, "CountCitaion");
 
 		// job init
-		job.setJarByClass(CountCitaion.class);
+		job.setJarByClass(CountCitation.class);
 
 		// mapper 지정
 		job.setMapperClass(MyMapper.class);
