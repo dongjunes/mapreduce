@@ -30,12 +30,11 @@ public class CountTrigram {
 			String line = value.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 
-			String firstWord = token.nextToken();
-			String secondWord = token.nextToken();
-
 			if (token.countTokens() < 3) {
 				return;
 			}
+			String firstWord = token.nextToken();
+			String secondWord = token.nextToken();
 
 			while (token.hasMoreTokens()) {
 				String thirdWord = token.nextToken();
