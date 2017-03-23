@@ -19,13 +19,13 @@ import com.bit2017.mapreduce.io.StringWritable;
 import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
-	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
-		private static NumberWritable one = new NumberWritable(1L);
+	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, LongWritable> {
+		private static LongWritable one = new LongWritable(1L);
 		private StringWritable words = new StringWritable();
 
 		@Override
 		protected void map(LongWritable key, Text value,
-				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
+				Mapper<LongWritable, Text, StringWritable, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			Configuration conf = context.getConfiguration();
 			CharSequence c = conf.get("data");
@@ -44,16 +44,16 @@ public class SearchDocs {
 
 	}
 
-	public static class MyReducer extends Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable> {
+	public static class MyReducer extends Reducer<StringWritable, LongWritable, StringWritable, LongWritable> {
 
-		private NumberWritable sumWritable = new NumberWritable();
+		private LongWritable sumWritable = new LongWritable();
 
 		@Override
-		protected void reduce(StringWritable key, Iterable<NumberWritable> values,
-				Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable>.Context context)
+		protected void reduce(StringWritable key, Iterable<LongWritable> values,
+				Reducer<StringWritable, LongWritable, StringWritable, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			long sum = 0;
-			for (NumberWritable value : values) {
+			for (LongWritable value : values) {
 				sum += value.get();
 			}
 			sumWritable.set(sum);
