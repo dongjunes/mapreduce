@@ -15,17 +15,16 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import com.bit2017.mapreduce.io.NumberWritable;
-import com.bit2017.mapreduce.io.StringWritable;
 import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
-	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, LongWritable> {
+	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 		private static LongWritable one = new LongWritable(1L);
-		private StringWritable words = new StringWritable();
+		private Text words = new Text();
 
 		@Override
 		protected void map(LongWritable key, Text value,
-				Mapper<LongWritable, Text, StringWritable, LongWritable>.Context context)
+				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			Configuration conf = context.getConfiguration();
 			CharSequence c = conf.get("data");
@@ -44,13 +43,13 @@ public class SearchDocs {
 
 	}
 
-	public static class MyReducer extends Reducer<StringWritable, LongWritable, StringWritable, LongWritable> {
+	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
 
 		private LongWritable sumWritable = new LongWritable();
 
 		@Override
-		protected void reduce(StringWritable key, Iterable<LongWritable> values,
-				Reducer<StringWritable, LongWritable, StringWritable, LongWritable>.Context context)
+		protected void reduce(Text key, Iterable<LongWritable> values,
+				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			long sum = 0;
 			for (LongWritable value : values) {
@@ -71,7 +70,7 @@ public class SearchDocs {
 		job.setJarByClass(SearchDocs.class);
 		job.setMapperClass(MyMapper.class);
 		job.setReducerClass(MyReducer.class);
-		job.setMapOutputKeyClass(StringWritable.class);
+		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(NumberWritable.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
