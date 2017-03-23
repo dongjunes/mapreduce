@@ -21,7 +21,7 @@ public class JoinIdTitle {
 		@Override
 		protected void map(Text key, Text value, Mapper<Text, Text, Text, Text>.Context context)
 				throws IOException, InterruptedException {
-			context.write(key, new Text(value + "\t" + 2));
+			context.write(key, new Text(value + "\t" + 1));
 		}
 
 	}
@@ -31,7 +31,7 @@ public class JoinIdTitle {
 		@Override
 		protected void map(Text key, Text value, Mapper<Text, Text, Text, Text>.Context context)
 				throws IOException, InterruptedException {
-			context.write(value, new Text(key + "\t" + 1));
+			context.write(value, new Text(key + "\t" + 2));
 
 		}
 
@@ -55,7 +55,7 @@ public class JoinIdTitle {
 				}
 
 				if ("1".equals(tokens[1])) {
-					k.set(tokens[0] + "[" + key + "]");
+					k.set(tokens[0] + "[" + key.toString() + "]");
 				} else if ("2".equals(tokens[1])) {
 					v.set(tokens[0]);
 				} else {
