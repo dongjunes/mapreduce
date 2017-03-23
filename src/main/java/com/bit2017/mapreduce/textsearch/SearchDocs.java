@@ -17,12 +17,12 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
-	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
 		private LongWritable one = new LongWritable(1L);
 		private Text words = new Text();
 
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void map(Text key, Text value, Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			Configuration conf = context.getConfiguration();
 			CharSequence c = conf.get("data");
