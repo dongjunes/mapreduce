@@ -33,11 +33,10 @@ public class SearchDocs {
 			while (lastIndex != -1) {
 				lastIndex = line.indexOf(findWord, lastIndex);
 				if (lastIndex != -1) {
-
 					count++;
-					one = new LongWritable(Long.valueOf(count.toString()));
 					lastIndex += findWord.length();
 				}
+				one = new LongWritable(Long.valueOf(count.toString()));
 
 			}
 			words.set(findWord);
