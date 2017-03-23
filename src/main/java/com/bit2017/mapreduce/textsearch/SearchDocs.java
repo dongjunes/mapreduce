@@ -30,7 +30,8 @@ public class SearchDocs {
 
 			String line = value.toString();
 
-			// StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<>''.:");
+			// StringTokenizer token = new StringTokenizer(line,
+			// "\r\n\t,|()<>''.:");
 			if (line.contains(c)) {
 				words.set(line);
 				context.write(words, one);
@@ -54,9 +55,6 @@ public class SearchDocs {
 				sum += value.get();
 			}
 			sumWritable.set(sum);
-
-			context.getCounter("Word Status", "Count of all Words").increment(sum);
-
 			context.write(key, sumWritable);
 
 		}
