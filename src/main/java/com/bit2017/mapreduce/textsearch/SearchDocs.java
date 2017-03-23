@@ -10,11 +10,13 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import com.bit2017.mapreduce.io.NumberWritable;
 import com.bit2017.mapreduce.io.StringWritable;
+import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
@@ -65,35 +67,40 @@ public class SearchDocs {
 		Configuration conf = new Configuration();
 		conf.set("data", args[2]);
 
-		Job job = new Job(conf, "TextSearch");
-		// job init
-		job.setJarByClass(TextSearch.class);
-
-		// mapper 지정
+		Job job = new Job(conf, "SearchDocs");
+		job.setJarByClass(SearchDocs.class);
 		job.setMapperClass(MyMapper.class);
-
-		// reducer 지정
 		job.setReducerClass(MyReducer.class);
-
-		// 출력 키 타입
 		job.setMapOutputKeyClass(StringWritable.class);
-
-		// 출력 타입지정
 		job.setMapOutputValueClass(NumberWritable.class);
-
-		// 입력 파일포멧 지정(생략가능
 		job.setInputFormatClass(TextInputFormat.class);
-
-		// 출력 파일포멧 지정(생략가능
 		job.setOutputFormatClass(TextOutputFormat.class);
-
-		// 입력파일 이름지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
-
-		// 출력디렉토리 지정
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
-		// 실행
 		job.waitForCompletion(true);
+
+		if (job.waitForCompletion(true) == false) {
+			return;
+		}
+
+		Configuration conf2 = new Configuration();
+		Job job2 = new Job(conf2, "TopN");
+
+		job2.setJarByClass(TopN.class);
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(LongWritable.class);
+
+		job2.setMapperClass(TopN.MyMapper.class);
+		job2.setReducerClass(TopN.MyReducer.class);
+
+		job2.setInputFormatClass(KeyValueTextInputFormat.class);
+		job2.setOutputFormatClass(TextOutputFormat.class);
+
+		FileInputFormat.addInputPath(job2, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
+		job2.getConfiguration().setInt("topN", 10);
+
+		job2.waitForCompletion(true);
+
 	}
 }
