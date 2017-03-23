@@ -11,10 +11,12 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import com.bit2017.mapreduce.topn.TopN;
 import com.bit2017.mapreduce.wordcount.WordCount;
 
 public class CountTrigram {
@@ -102,6 +104,30 @@ public class CountTrigram {
 
 		// 실행
 		job.waitForCompletion(true);
+
+		if (job.waitForCompletion(true) == false) {
+			return;
+		}
+
+		Configuration conf2 = new Configuration();
+		Job job2 = new Job(conf2, "TopN");
+
+		job2.setJarByClass(TopN.class);
+		job2.setOutputKeyClass(Text.class);
+		job2.setOutputValueClass(LongWritable.class);
+
+		job2.setMapperClass(TopN.MyMapper.class);
+		job2.setReducerClass(TopN.MyReducer.class);
+
+		job2.setInputFormatClass(KeyValueTextInputFormat.class);
+		job2.setOutputFormatClass(TextOutputFormat.class);
+
+		FileInputFormat.addInputPath(job2, new Path(args[1]));
+		FileInputFormat.addInputPath(job2, new Path(args[1] + "/topN"));
+		job2.getConfiguration().setInt("topN", 10);
+
+		job2.waitForCompletion(true);
+
 	}
 
 }
