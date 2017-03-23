@@ -38,7 +38,6 @@ public class SearchDocs {
 						lastIndex += findWord.length();
 					}
 					one = new LongWritable(Long.valueOf(count.toString()));
-
 				}
 				words.set(findWord);
 				context.write(words, one);
