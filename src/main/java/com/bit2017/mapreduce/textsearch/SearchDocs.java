@@ -18,12 +18,11 @@ import com.bit2017.mapreduce.topn.TopN;
 
 public class SearchDocs {
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
-		private static LongWritable one = new LongWritable(1L);
+		private LongWritable one = new LongWritable(1L);
 		private Text words = new Text();
 
 		@Override
-		protected void map(LongWritable key, Text value,
-				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			Configuration conf = context.getConfiguration();
 			CharSequence c = conf.get("data");
@@ -35,7 +34,6 @@ public class SearchDocs {
 			if (line.contains(c)) {
 				words.set(line);
 				context.write(words, one);
-
 			}
 
 		}
