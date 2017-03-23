@@ -123,7 +123,7 @@ public class CountTrigram {
 		job2.setOutputFormatClass(TextOutputFormat.class);
 
 		FileInputFormat.addInputPath(job2, new Path(args[1]));
-		FileInputFormat.addInputPath(job2, new Path(args[1] + "/topN"));
+		FileOutputFormat.setOutputPath(job2, new Path(args[1] + "/topN"));
 		job2.getConfiguration().setInt("topN", 10);
 
 		job2.waitForCompletion(true);
