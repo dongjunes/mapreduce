@@ -20,8 +20,8 @@ public class InvertedIndex1 {
 
 	public static class MyMapper extends Mapper<Text, Text, Text, Text> {
 
-		private Text words = new Text();
-		private Set<String> wordSet = new HashSet<String>();
+		private Text word = new Text();
+		private Set<String> words = new HashSet<String>();
 
 		@Override
 		protected void map(Text docId, Text contents, Mapper<Text, Text, Text, Text>.Context context)
@@ -29,14 +29,14 @@ public class InvertedIndex1 {
 
 			String line = contents.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
-			wordSet.clear();
-			while (token.hasMoreTokens()) {
-				wordSet.add(token.nextToken().toLowerCase());
+			words.clear();
+			while( token.hasMoreTokens() ) {
+				words.add( token.nextToken().toLowerCase() );
 			}
-			for (String w : wordSet) {
-				words.set(w);
-				context.write(words,docId);
 
+			for( String w : words ) {
+				word.set( w );
+				context.write( word, docId );
 			}
 
 		}
