@@ -35,7 +35,7 @@ public class InvertedIndex1 {
 			}
 			for (String w : wordSet) {
 				words.set(w);
-				context.write(docId, words);
+				context.write(words,docId);
 
 			}
 
