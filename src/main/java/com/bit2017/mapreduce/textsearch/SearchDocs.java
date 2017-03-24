@@ -30,18 +30,17 @@ public class SearchDocs {
 
 			int lastIndex = 0;
 			Integer count = 0;
-			while (token.hasMoreTokens()) {
-				while (lastIndex != -1) {
-					lastIndex = line.indexOf(findWord, lastIndex);
-					if (lastIndex != -1) {
-						count++;
-						lastIndex += findWord.length();
-					}
-					one = new LongWritable(Long.valueOf(count.toString()));
+			while (lastIndex != -1) {
+				lastIndex = line.indexOf(findWord, lastIndex);
+				if (lastIndex != -1) {
+					count++;
+					lastIndex += findWord.length();
 				}
-				words.set(findWord);
-				context.write(words, one);
+				one = new LongWritable(Long.valueOf(count.toString()));
 			}
+			words.set(findWord);
+			context.write(words, one);
+
 		}
 
 	}
