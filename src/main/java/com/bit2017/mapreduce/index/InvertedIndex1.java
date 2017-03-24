@@ -5,14 +5,12 @@ import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
@@ -20,7 +18,6 @@ public class InvertedIndex1 {
 
 	public static class MyMapper extends Mapper<Text, Text, Text, Text> {
 
-		private static LongWritable one = new LongWritable(1L);
 		private Text words = new Text();
 
 		@Override
@@ -71,6 +68,9 @@ public class InvertedIndex1 {
 
 		// reducer 지정
 		job.setReducerClass(MyReducer.class);
+
+		// 리듀스 개수 지정
+		job.setNumReduceTasks(10);
 
 		// map출력 키 타입
 		job.setMapOutputKeyClass(Text.class);
