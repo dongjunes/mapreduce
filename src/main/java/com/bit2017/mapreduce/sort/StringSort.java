@@ -10,8 +10,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 public class StringSort {
@@ -35,8 +35,14 @@ public class StringSort {
 		// 맵출력 타입지정
 		job.setMapOutputValueClass(Text.class);
 
+		// 처리 결과 출력 키 타입(리듀스)
+		job.setOutputKeyClass(Text.class);
+
+		// 처리 결과 출력 밸류 타입(리듀스)
+		job.setOutputValueClass(Text.class);
+
 		// 입력 파일포멧 지정(생략가능
-		job.setInputFormatClass(TextInputFormat.class);
+		job.setInputFormatClass(KeyValueTextInputFormat.class);
 
 		// 출력 파일포멧 지정(생략가능
 		job.setOutputFormatClass(SequenceFileOutputFormat.class);
