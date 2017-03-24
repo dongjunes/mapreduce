@@ -1,6 +1,8 @@
 package com.bit2017.mapreduce.index;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -19,6 +21,7 @@ public class InvertedIndex1 {
 	public static class MyMapper extends Mapper<Text, Text, Text, Text> {
 
 		private Text words = new Text();
+		private Set<String> wordSet = new HashSet<String>();
 
 		@Override
 		protected void map(Text docId, Text contents, Mapper<Text, Text, Text, Text>.Context context)
@@ -26,10 +29,14 @@ public class InvertedIndex1 {
 
 			String line = contents.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
+			wordSet.clear();
 			while (token.hasMoreTokens()) {
-				String tokens = token.nextToken().toLowerCase();
-				words.set(tokens);
-				context.write(words, docId);
+				wordSet.add(token.nextToken().toLowerCase());
+			}
+			for (String w : wordSet) {
+				words.set(w);
+				context.write(docId, words);
+
 			}
 
 		}
