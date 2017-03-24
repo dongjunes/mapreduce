@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce.wordcount;
+package com.bit2017.mapreduce.index;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -11,58 +11,60 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import com.bit2017.mapreduce.wordcount.WordCount;
 
-public class WordCount {
-	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+public class InvertedIndex1 {
+
+	public static class MyMapper extends Mapper<Text, Text, Text, Text> {
 
 		private static LongWritable one = new LongWritable(1L);
 		private Text words = new Text();
 
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void map(Text docId, Text contents, Mapper<Text, Text, Text, Text>.Context context)
 				throws IOException, InterruptedException {
 
-			String line = value.toString();
+			String line = contents.toString();
 			StringTokenizer token = new StringTokenizer(line, "\r\n\t,|()<> ''.:");
 			while (token.hasMoreTokens()) {
-				words.set(token.nextToken().toLowerCase());
-				context.write(words, one);
-
+				String tokens = token.nextToken().toLowerCase();
+				words.set(tokens);
+				context.write(words, docId);
 			}
 
 		}
 
 	}
 
-	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
-
-		private LongWritable sumWritable = new LongWritable();
+	public static class MyReducer extends Reducer<Text, Text, Text, Text> {
 
 		@Override
-		protected void reduce(Text key, Iterable<LongWritable> values,
-				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+		protected void reduce(Text word, Iterable<Text> docIds, Reducer<Text, Text, Text, Text>.Context context)
 				throws IOException, InterruptedException {
-			long sum = 0;
-			for (LongWritable value : values) {
-				sum += value.get();
+			StringBuilder s = new StringBuilder();
+			boolean isFirst = true;
+			for (Text docId : docIds) {
+				if (isFirst != true) {
+					s.append(",");
+				} else {
+					isFirst = false;
+				}
+				s.append(docId.toString());
 			}
-			sumWritable.set(sum);
-			context.write(key, sumWritable);
-
+			context.write(word, new Text(s.toString()));
 		}
 
 	}
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = new Job(conf, "Inverted Index 1");
+		Job job = new Job(conf, "WordCount");
 
 		// job init
-		job.setJarByClass(WordCount.class);
+		job.setJarByClass(InvertedIndex1.class);
 
 		// mapper 지정
 		job.setMapperClass(MyMapper.class);
@@ -70,11 +72,20 @@ public class WordCount {
 		// reducer 지정
 		job.setReducerClass(MyReducer.class);
 
-		// 출력 타입지정
-		job.setMapOutputValueClass(LongWritable.class);
+		// map출력 키 타입
+		job.setMapOutputKeyClass(Text.class);
+
+		// map출력 타입지정
+		job.setMapOutputValueClass(Text.class);
+
+		// reduce출력 키 타입
+		job.setOutputKeyClass(Text.class);
+
+		// reduce출력 타입지정
+		job.setOutputValueClass(Text.class);
 
 		// 입력 파일포멧 지정(생략가능
-		job.setInputFormatClass(TextInputFormat.class);
+		job.setInputFormatClass(KeyValueTextInputFormat.class);
 
 		// 출력 파일포멧 지정(생략가능
 		job.setOutputFormatClass(TextOutputFormat.class);

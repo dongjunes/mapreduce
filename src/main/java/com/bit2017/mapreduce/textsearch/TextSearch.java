@@ -22,10 +22,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.HeapSort;
 
+import com.bit2017.mapreduce.index.InvertedIndex1.MyMapper;
+import com.bit2017.mapreduce.index.InvertedIndex1.MyReducer;
 import com.bit2017.mapreduce.io.NumberWritable;
 import com.bit2017.mapreduce.io.StringWritable;
-import com.bit2017.mapreduce.wordcount.WordCount.MyMapper;
-import com.bit2017.mapreduce.wordcount.WordCount.MyReducer;
 
 public class TextSearch {
 

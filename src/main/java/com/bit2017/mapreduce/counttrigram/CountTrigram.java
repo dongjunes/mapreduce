@@ -16,8 +16,8 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import com.bit2017.mapreduce.index.InvertedIndex1;
 import com.bit2017.mapreduce.topn.TopN;
-import com.bit2017.mapreduce.wordcount.WordCount;
 
 public class CountTrigram {
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
