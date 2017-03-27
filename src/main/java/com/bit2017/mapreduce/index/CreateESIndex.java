@@ -38,7 +38,7 @@ public class CreateESIndex {
 			urlCon.setRequestMethod("PUT");
 
 			// json문자열 만들기
-			String line = contents.toString().replace("\\", "\\\\").replaceAll("\"", "\\\"");
+			String line = contents.toString().replace("\\", "\\\\").replace("\"", "\\\"");
 			String json = "{\"body\":\"" + line + "\" }";
 
 			// 데이터 보내기
