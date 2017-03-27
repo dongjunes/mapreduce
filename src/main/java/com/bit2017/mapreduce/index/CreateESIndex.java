@@ -54,11 +54,10 @@ public class CreateESIndex {
 			}
 
 			if (sb.indexOf("\"successful\":1,\"failed\":0") < 0) {
-				context.getCounter("Index stats", "fail").increment(1);
+				context.getCounter("stats", "error docs").increment(1);
 			} else {
-				context.getCounter("Index stats", "success").increment(1);
+				context.getCounter("stats", "success docs").increment(1);
 			}
-
 		}
 	}
 
