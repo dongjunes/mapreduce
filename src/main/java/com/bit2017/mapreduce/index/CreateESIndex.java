@@ -25,7 +25,7 @@ public class CreateESIndex {
 		@Override
 		protected void setup(Mapper<Text, Text, Text, Text>.Context context) throws IOException, InterruptedException {
 			String hosts[] = context.getConfiguration().getStrings("ESServer");
-			baseURL = "http://" + hosts[0] + ":9200/wikipedia/doc";
+			baseURL = "http://" + hosts[0] + ":9200/wikipedia/doc/";
 		}
 
 		@Override
@@ -54,9 +54,9 @@ public class CreateESIndex {
 			}
 
 			if (sb.indexOf("\"successful\":1,\"failed\":0") < 0) {
-				context.getCounter("Index stats","fail").increment(1);
-			}else{
-				context.getCounter("Index stats","success").increment(1);
+				context.getCounter("Index stats", "fail").increment(1);
+			} else {
+				context.getCounter("Index stats", "success").increment(1);
 			}
 
 		}
